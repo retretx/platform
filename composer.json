@@ -23,6 +23,7 @@
     "prefer-stable": true,
     "require-dev": {
         "league/container": "^4.2",
-        "markrogoyski/simplelog-php": "^0.4.0"
+        "markrogoyski/simplelog-php": "^0.4.0",
+        "league/event": "^3.0"
     }
 }

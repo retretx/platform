@@ -7,6 +7,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionException;
+use Rrmode\Platform\Bootstrap\AbstractContainerConfiguration;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializationEvent;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializedEvent;
 use RuntimeException;
@@ -47,6 +48,10 @@ class Application implements EventDispatcherInterface
         ContainerInterface $container
     ): static
     {
+        if (!$container->has(AbstractContainerConfiguration::class)) {
+            throw new RuntimeException('Container configuration class not registered');
+        }
+
         return static::$app = new static($container);
     }
 
