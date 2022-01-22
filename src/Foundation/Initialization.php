@@ -2,6 +2,7 @@
 
 namespace Rrmode\Platform\Foundation;
 
+use Closure;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -13,10 +14,10 @@ trait Initialization
 {
     use ContainerCalls;
 
-    public function getInitializers(): array
-    {
-        $initializers = [];
+    static array $initializers = [];
 
+    public function loadInitializers(): array
+    {
         $class = new ReflectionClass($this);
 
         $methods = $class->getMethods();
@@ -25,11 +26,21 @@ trait Initialization
             $name = $method->getName();
 
             if ($name !== 'initialize' && str_starts_with($name, 'initialize')) {
-                $initializers[] = $name;
+                static::$initializers[$name] = $this->$name(...);
             }
         }
 
-        return $initializers;
+        return static::$initializers;
+    }
+
+    public static function addInitializer(string $name, Closure $initializer): void
+    {
+        static::$initializers[$name] = $initializer;
+    }
+
+    public function dropInitializers(): void
+    {
+        static::$initializers = [];
     }
 
     /**
@@ -39,7 +50,7 @@ trait Initialization
      */
     public function runInitializers(ContainerInterface $container): void
     {
-        foreach ($this->getInitializers() as $initializer) {
+        foreach ($this->loadInitializers() as $initializer) {
             $this->method($initializer, $container);
         }
     }

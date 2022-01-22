@@ -2,6 +2,7 @@
 
 namespace Rrmode\Platform\Foundation;
 
+use Closure;
 use League\Container\Exception\NotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -9,7 +10,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionIntersectionType;
-use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionType;
@@ -17,7 +17,7 @@ use ReflectionType;
 trait ContainerCalls
 {
     /**
-     * @param callable $method
+     * @param Closure $function
      * @param array<ReflectionParameter> $reflectionParameters
      * @param ContainerInterface $container
      * @param array $userParameters
@@ -26,7 +26,7 @@ trait ContainerCalls
      * @throws NotFoundExceptionInterface
      */
     private function resolvedCall(
-        callable $method,
+        Closure $function,
         array $reflectionParameters,
         ContainerInterface $container,
         array $userParameters = [],
@@ -47,25 +47,25 @@ trait ContainerCalls
             $userParameters,
         );
 
-        return $method(...$parameters);
+        return $function(...$parameters);
     }
 
     /**
-     * @param string $method
-     * @param array $parameters
+     * @param Closure $method
      * @param ContainerInterface $container
+     * @param array $parameters
      * @return mixed
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     public function method(
-        string $method,
+        Closure     $method,
         ContainerInterface $container,
-        array $parameters = [],
+        array              $parameters = [],
     ): mixed
     {
-        $reflection = new ReflectionMethod($this, $method);
+        $reflection = new ReflectionFunction($method);
 
         return $this->resolvedCall(
             $method,
@@ -76,7 +76,7 @@ trait ContainerCalls
     }
 
     /**
-     * @param string $function
+     * @param Closure $function
      * @param ContainerInterface $container
      * @param array $parameters
      * @return mixed
@@ -85,7 +85,7 @@ trait ContainerCalls
      * @throws ReflectionException
      */
     public function func(
-        string $function,
+        Closure $function,
         ContainerInterface $container,
         array $parameters = [],
     ): mixed
