@@ -45,9 +45,9 @@ class Application implements EventDispatcherInterface
      */
     public static function initialize(
         ContainerInterface $container
-    )
+    ): static
     {
-        static::$app = new static($container);
+        return static::$app = new static($container);
     }
 
     /**
