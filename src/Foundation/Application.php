@@ -5,10 +5,14 @@ namespace Rrmode\Platform\Foundation;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionException;
+use Rrmode\Platform\Foundation\Events\ApplicationInitializationEvent;
+use Rrmode\Platform\Foundation\Events\ApplicationInitializedEvent;
 use RuntimeException;
+use Throwable;
 
-class Application
+class Application implements EventDispatcherInterface
 {
     use Environment;
     use Initialization;
@@ -23,7 +27,15 @@ class Application
     private function __construct(
         private ContainerInterface $container,
     ){
+        $this->dispatch(
+            new ApplicationInitializationEvent($this->now())
+        );
+
         $this->runInitializers($this->container);
+
+        $this->dispatch(
+            new ApplicationInitializedEvent($this->now())
+        );
     }
 
     /**
@@ -59,5 +71,16 @@ class Application
         }
 
         return $app->container->get($class);
+    }
+
+    public function dispatch(object $event): mixed
+    {
+        try {
+            $dispatcher = static::make(EventDispatcherInterface::class);
+
+            return $dispatcher->dispatch($event);
+        } catch (Throwable) {
+            return null;
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Rrmode\Platform\Foundation;
 
+use DateTimeImmutable;
 use function php_sapi_name;
 use const STDIN;
 use const STDOUT;
@@ -28,5 +29,15 @@ trait Environment
         $sapi = $this->getSapiName();
 
         return $sapi === 'phpdbg' || $sapi === 'cli';
+    }
+
+    public function getVariable(string $name, mixed $default = null)
+    {
+        return $_ENV[$name] ?? $default;
+    }
+
+    public function now(): DateTimeImmutable
+    {
+        return new DateTimeImmutable();
     }
 }
