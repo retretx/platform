@@ -1,0 +1,27 @@
+{
+    "name": "rrmode/platform",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rrmode\\Platform\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rrmode",
+            "email": "retretx@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "psr/container": "^1.0|^2.0",
+        "psr/log": "^1.0|^2.0|^3.0",
+        "psr/event-dispatcher": "^1.0"
+    },
+    "prefer-stable": true,
+    "require-dev": {
+        "league/container": "^4.2",
+        "markrogoyski/simplelog-php": "^0.4.0"
+    }
+}
