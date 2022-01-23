@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionException;
+use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
 use function str_starts_with;
 
 trait Initialization
@@ -48,7 +49,7 @@ trait Initialization
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function runInitializers(ContainerInterface $container): void
+    public function runInitializers(ContainerInterface|AbstractAdvancedContainerCapabilities $container): void
     {
         foreach ($this->loadInitializers() as $initializer) {
             $this->method($initializer, $container);

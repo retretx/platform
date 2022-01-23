@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionException;
-use Rrmode\Platform\Bootstrap\AbstractContainerConfiguration;
+use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializationEvent;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializedEvent;
 use RuntimeException;
@@ -26,7 +26,7 @@ class Application implements EventDispatcherInterface
      * @throws NotFoundExceptionInterface
      */
     private function __construct(
-        private ContainerInterface $container,
+        private ContainerInterface|AbstractAdvancedContainerCapabilities $container,
     ){
         $this->dispatch(
             new ApplicationInitializationEvent($this->now())
@@ -45,13 +45,9 @@ class Application implements EventDispatcherInterface
      * @throws NotFoundExceptionInterface
      */
     public static function initialize(
-        ContainerInterface $container
+        ContainerInterface|AbstractAdvancedContainerCapabilities $container
     ): static
     {
-        if (!$container->has(AbstractContainerConfiguration::class)) {
-            throw new RuntimeException('Container configuration class not registered');
-        }
-
         return static::$app = new static($container);
     }
 
@@ -75,7 +71,14 @@ class Application implements EventDispatcherInterface
             return $app;
         }
 
-        return $app->container->get($class);
+        return static::getContainer()->get($class);
+    }
+
+    public static function getContainer(): ContainerInterface|AbstractAdvancedContainerCapabilities
+    {
+        $app = static::$app;
+
+        return $app->container;
     }
 
     public function dispatch(object $event): mixed

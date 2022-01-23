@@ -13,13 +13,14 @@ use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionType;
+use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
 
 trait ContainerCalls
 {
     /**
      * @param Closure $function
      * @param array<ReflectionParameter> $reflectionParameters
-     * @param ContainerInterface $container
+     * @param ContainerInterface|AbstractAdvancedContainerCapabilities $container
      * @param array $userParameters
      * @return mixed
      * @throws ContainerExceptionInterface
@@ -28,7 +29,7 @@ trait ContainerCalls
     private function resolvedCall(
         Closure $function,
         array $reflectionParameters,
-        ContainerInterface $container,
+        ContainerInterface|AbstractAdvancedContainerCapabilities $container,
         array $userParameters = [],
     ): mixed
     {
@@ -52,7 +53,7 @@ trait ContainerCalls
 
     /**
      * @param Closure $method
-     * @param ContainerInterface $container
+     * @param ContainerInterface|AbstractAdvancedContainerCapabilities $container
      * @param array $parameters
      * @return mixed
      * @throws ContainerExceptionInterface
@@ -61,7 +62,7 @@ trait ContainerCalls
      */
     public function method(
         Closure     $method,
-        ContainerInterface $container,
+        ContainerInterface|AbstractAdvancedContainerCapabilities $container,
         array              $parameters = [],
     ): mixed
     {
@@ -77,7 +78,7 @@ trait ContainerCalls
 
     /**
      * @param Closure $function
-     * @param ContainerInterface $container
+     * @param ContainerInterface|AbstractAdvancedContainerCapabilities $container
      * @param array $parameters
      * @return mixed
      * @throws ContainerExceptionInterface
@@ -86,7 +87,7 @@ trait ContainerCalls
      */
     public function func(
         Closure $function,
-        ContainerInterface $container,
+        ContainerInterface|AbstractAdvancedContainerCapabilities $container,
         array $parameters = [],
     ): mixed
     {
@@ -105,7 +106,7 @@ trait ContainerCalls
      */
     private function resolve(
         ReflectionType|ReflectionNamedType|ReflectionIntersectionType $type,
-        ContainerInterface $container
+        ContainerInterface|AbstractAdvancedContainerCapabilities $container
     ): object
     {
         if ($type instanceof ReflectionIntersectionType) {

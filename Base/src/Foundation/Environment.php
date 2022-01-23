@@ -3,6 +3,8 @@
 namespace Rrmode\Platform\Foundation;
 
 use DateTimeImmutable;
+use Psr\Container\ContainerInterface;
+use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
 use function php_sapi_name;
 use const STDIN;
 use const STDOUT;
@@ -39,5 +41,12 @@ trait Environment
     public function now(): DateTimeImmutable
     {
         return new DateTimeImmutable();
+    }
+
+    public function isAdvancedContainerCapabilitiesDefined(
+        ContainerInterface $container
+    ): bool
+    {
+        return $container->has(AbstractAdvancedContainerCapabilities::class);
     }
 }

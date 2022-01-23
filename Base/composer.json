@@ -1,0 +1,24 @@
+{
+    "name": "rrmode/platform-base",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rrmode\\Platform\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rrmode",
+            "email": "retretx@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1",
+        "psr/container": "^1.0|^2.0",
+        "psr/log": "^1.0|^2.0|^3.0",
+        "psr/event-dispatcher": "^1.0"
+    }
+}

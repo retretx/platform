@@ -1,29 +1,33 @@
 {
     "name": "rrmode/platform",
-    "type": "library",
+    "type": "project",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Rrmode\\Platform\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "rrmode",
             "email": "retretx@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "Base"
+        },
+        {
+            "type": "path",
+            "url": "Bootstrap"
+        }
+    ],
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.1",
-        "psr/container": "^1.0|^2.0",
-        "psr/log": "^1.0|^2.0|^3.0",
-        "psr/event-dispatcher": "^1.0"
+        "rrmode/platform-base": "*",
+        "rrmode/platform-bootstrap": "*"
     },
     "prefer-stable": true,
     "require-dev": {
-        "league/container": "^4.2",
         "markrogoyski/simplelog-php": "^0.4.0",
-        "league/event": "^3.0"
+        "league/event": "^3.0",
+        "league/container": "^4.2"
     }
 }
