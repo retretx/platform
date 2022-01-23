@@ -14,7 +14,7 @@ use Rrmode\Platform\Foundation\Events\ApplicationInitializedEvent;
 use RuntimeException;
 use Throwable;
 
-class Application implements EventDispatcherInterface
+class Application implements EventDispatcherInterface, ContainerInterface
 {
     use Environment;
     use Initialization;
@@ -55,7 +55,6 @@ class Application implements EventDispatcherInterface
     {
         static::logDebug($container, 'Initialization started');
 
-
         return static::$app = new static($container);
     }
 
@@ -79,19 +78,12 @@ class Application implements EventDispatcherInterface
             return $app;
         }
 
-        return static::getContainer()->get($class);
-    }
-
-    public static function getContainer(): ContainerInterface|AbstractAdvancedContainerCapabilities
-    {
-        $app = static::$app;
-
-        return $app->container;
+        return $app->get($class);
     }
 
     public function dispatch(object $event): mixed
     {
-        return static::dispatchToContainer($this->container, $event);
+        return static::dispatchToContainer($this, $event);
     }
 
     private static function dispatchToContainer(ContainerInterface $container, object $event)
@@ -112,5 +104,22 @@ class Application implements EventDispatcherInterface
 
             $logger->debug($message);
         } catch (Throwable) {}
+    }
+
+    /**
+     * @template T
+     * @param class-string<T> $id
+     * @return T
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function get(string $id)
+    {
+        return $this->container->get($id);
+    }
+
+    public function has(string $id): bool
+    {
+        return $this->container->has($id);
     }
 }

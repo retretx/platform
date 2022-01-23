@@ -1,0 +1,22 @@
+{
+    "name": "rrmode/platform-packages",
+    "description": "Platform packages support",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rrmode\\Platform\\Packages\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rrmode",
+            "email": "retretx@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.1"
+    }
+}
