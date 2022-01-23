@@ -45,7 +45,7 @@ class ApplicationBuilder
         return $this;
     }
 
-    public function setDispatcher(EventDispatcherInterface|AbstractAdvancedDispatcherCapabilities $dispatcher): static
+    public function setEventDispatcher(EventDispatcherInterface|AbstractAdvancedDispatcherCapabilities $dispatcher): static
     {
         $this->dispatcher = $dispatcher;
 

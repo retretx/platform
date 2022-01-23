@@ -1,0 +1,26 @@
+{
+    "name": "rrmode/platform-dummy-package",
+    "description": "Test package",
+    "type": "platform-package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rrmode\\Platform\\Packages\\DummyPackage\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rrmode",
+            "email": "retretx@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "rrmode/platform-packages": "*"
+    },
+    "extra": {
+        "platform-package": {
+            "entry": "Rrmode\\Platform\\Packages\\DummyPackage\\AbstractPackageEntry"
+        }
+    }
+}

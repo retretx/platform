@@ -11,15 +11,12 @@ use ReflectionException;
 use Rrmode\Platform\Abstractions\AbstractAdvancedContainerCapabilities;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializationEvent;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializedEvent;
-use RuntimeException;
 use Throwable;
 
 class Application implements EventDispatcherInterface, ContainerInterface
 {
     use Environment;
     use Initialization;
-
-    private static Application $app;
 
     /**
      * @throws ReflectionException
@@ -55,30 +52,7 @@ class Application implements EventDispatcherInterface, ContainerInterface
     {
         static::logDebug($container, 'Initialization started');
 
-        return static::$app = new static($container);
-    }
-
-    /**
-     * @template T
-     * @param class-string<T> $class
-     * @return T
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws RuntimeException
-     */
-    public static function make(string $class = __CLASS__)
-    {
-        if (!isset(static::$app)) {
-            throw new RuntimeException('Application not initialized');
-        }
-
-        $app = static::$app;
-
-        if ($class === __CLASS__) {
-            return $app;
-        }
-
-        return $app->get($class);
+        return new static($container);
     }
 
     public function dispatch(object $event): mixed

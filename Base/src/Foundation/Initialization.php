@@ -14,16 +14,13 @@ use function str_starts_with;
 trait Initialization
 {
     use ContainerCalls;
+    use Reflected;
 
     static array $initializers = [];
 
     public function loadInitializers(): array
     {
-        $class = new ReflectionClass($this);
-
-        $methods = $class->getMethods();
-
-        foreach ($methods as $method) {
+        foreach ($this->getClassMethods() as $method) {
             $name = $method->getName();
 
             if ($name !== 'initialize' && str_starts_with($name, 'initialize')) {

@@ -1,5 +1,5 @@
 {
-    "name": "rrmode/platform",
+    "name": "rrmode/platform-application",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -16,13 +16,23 @@
         {
             "type": "path",
             "url": "Bootstrap"
+        },
+        {
+            "type": "path",
+            "url": "Packages"
+        },
+        {
+            "type": "path",
+            "url": "DummyPackage"
         }
     ],
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.1",
         "rrmode/platform-base": "*",
-        "rrmode/platform-bootstrap": "*"
+        "rrmode/platform-bootstrap": "*",
+        "rrmode/platform-packages": "*",
+        "rrmode/platform-dummy-package": "*"
     },
     "prefer-stable": true,
     "require-dev": {
