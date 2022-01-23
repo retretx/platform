@@ -7,7 +7,7 @@ use League\Container\Container;
 use League\Container\ReflectionContainer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Rrmode\Platform\Container\AbstractAdvancedContainerCapabilities;
+use Rrmode\Platform\Abstractions\AbstractAdvancedContainerCapabilities;
 
 class LeagueContainer extends AbstractAdvancedContainerCapabilities
 {
@@ -42,5 +42,11 @@ class LeagueContainer extends AbstractAdvancedContainerCapabilities
     public function addShared(string $id, Closure $concrete)
     {
         return $this->container->addShared($id, $concrete);
+    }
+
+    public function resetState()
+    {
+        unset($this->container);
+        $this->__construct();
     }
 }

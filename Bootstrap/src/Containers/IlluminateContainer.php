@@ -4,7 +4,7 @@ namespace Rrmode\Platform\Bootstrap\Containers;
 
 use Closure;
 use Illuminate\Contracts\Container\Container;
-use Rrmode\Platform\Container\AbstractAdvancedContainerCapabilities;
+use Rrmode\Platform\Abstractions\AbstractAdvancedContainerCapabilities;
 
 class IlluminateContainer extends AbstractAdvancedContainerCapabilities
 {
@@ -33,5 +33,10 @@ class IlluminateContainer extends AbstractAdvancedContainerCapabilities
     public function addShared(string $id, Closure $concrete)
     {
         $this->container->bind($id, $concrete, true);
+    }
+
+    public function resetState()
+    {
+        $this->container->flush();
     }
 }

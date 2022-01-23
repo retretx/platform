@@ -6,8 +6,9 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionException;
-use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
+use Rrmode\Platform\Abstractions\AbstractAdvancedContainerCapabilities;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializationEvent;
 use Rrmode\Platform\Foundation\Events\ApplicationInitializedEvent;
 use RuntimeException;
@@ -28,15 +29,19 @@ class Application implements EventDispatcherInterface
     private function __construct(
         private ContainerInterface|AbstractAdvancedContainerCapabilities $container,
     ){
-        $this->dispatch(
+        static::dispatchToContainer(
+            $this->container,
             new ApplicationInitializationEvent($this->now())
         );
 
         $this->runInitializers($this->container);
 
-        $this->dispatch(
+        static::dispatchToContainer(
+            $this->container,
             new ApplicationInitializedEvent($this->now())
         );
+
+        static::logDebug($this->container, 'Application initialized');
     }
 
     /**
@@ -48,6 +53,9 @@ class Application implements EventDispatcherInterface
         ContainerInterface|AbstractAdvancedContainerCapabilities $container
     ): static
     {
+        static::logDebug($container, 'Initialization started');
+
+
         return static::$app = new static($container);
     }
 
@@ -83,12 +91,26 @@ class Application implements EventDispatcherInterface
 
     public function dispatch(object $event): mixed
     {
+        return static::dispatchToContainer($this->container, $event);
+    }
+
+    private static function dispatchToContainer(ContainerInterface $container, object $event)
+    {
         try {
-            $dispatcher = static::make(EventDispatcherInterface::class);
+            $dispatcher = $container->get(EventDispatcherInterface::class);
 
             return $dispatcher->dispatch($event);
         } catch (Throwable) {
             return null;
         }
+    }
+
+    private static function logDebug(ContainerInterface $container, string $message)
+    {
+        try {
+            $logger = $container->get(LoggerInterface::class);
+
+            $logger->debug($message);
+        } catch (Throwable) {}
     }
 }

@@ -1,34 +1,26 @@
 <?php
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Rrmode\Platform\Container\AbstractAdvancedContainerCapabilities;
+use Rrmode\Platform\Bootstrap\ApplicationBuilder;
+use Rrmode\Platform\Bootstrap\Builders\ContainerBuilder;
+use Rrmode\Platform\Bootstrap\Builders\DispatcherBuilder;
+use Rrmode\Platform\Bootstrap\Builders\LoggerBuilder;
+use Rrmode\Platform\Bootstrap\Exceptions\ApplicationBuilderException;
 use Rrmode\Platform\Foundation\Application;
 
 /**
- * @throws ReflectionException
- * @throws ContainerExceptionInterface
- * @throws NotFoundExceptionInterface
+ * @throws ApplicationBuilderException
  */
 function buildApp(
-    ContainerInterface|AbstractAdvancedContainerCapabilities|null $container = null
+    ContainerBuilder $containerBuilder = new ContainerBuilder(),
+    LoggerBuilder $loggerBuilder = new LoggerBuilder(),
+    DispatcherBuilder $dispatcherBuilder = new DispatcherBuilder(),
 ): Application
 {
-    $container ??= containerDiscovery();
+    $appBuilder = new ApplicationBuilder(
+        $containerBuilder,
+        $loggerBuilder,
+        $dispatcherBuilder,
+    );
 
-    return Application::initialize($container);
-}
-
-function containerDiscovery(): AbstractAdvancedContainerCapabilities
-{
-    if (class_exists(League\Container\Container::class)) {
-        return new \Rrmode\Platform\Bootstrap\Containers\LeagueContainer();
-    }
-
-    if (class_exists(\Illuminate\Container\Container::class)) {
-        return new \Rrmode\Platform\Bootstrap\Containers\IlluminateContainer();
-    }
-
-    throw new RuntimeException("No container");
+    return $appBuilder->buildApplication();
 }

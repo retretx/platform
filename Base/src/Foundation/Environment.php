@@ -4,7 +4,7 @@ namespace Rrmode\Platform\Foundation;
 
 use DateTimeImmutable;
 use Psr\Container\ContainerInterface;
-use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
+use Rrmode\Platform\Abstractions\AbstractAdvancedContainerCapabilities;
 use function php_sapi_name;
 use const STDIN;
 use const STDOUT;

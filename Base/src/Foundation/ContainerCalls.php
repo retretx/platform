@@ -13,7 +13,7 @@ use ReflectionIntersectionType;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionType;
-use Rrmode\Platform\Bootstrap\AbstractAdvancedContainerCapabilities;
+use Rrmode\Platform\Abstractions\AbstractAdvancedContainerCapabilities;
 
 trait ContainerCalls
 {

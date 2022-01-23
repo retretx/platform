@@ -1,13 +1,13 @@
 <?php
 
-namespace Rrmode\Platform\Container;
+namespace Rrmode\Platform\Abstractions;
 
 use ArrayAccess;
 use Closure;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
-abstract class AbstractAdvancedContainerCapabilities implements ContainerInterface, ArrayAccess
+abstract class AbstractAdvancedContainerCapabilities implements ContainerInterface, ArrayAccess, ResetObjectStateInterface
 {
     /**
      * @template T
