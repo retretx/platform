@@ -1,0 +1,105 @@
+<?php
+
+namespace Rrmode\Platform\Packages;
+
+use Composer\InstalledVersions;
+use Psr\Container\ContainerInterface;
+use Rrmode\Platform\Foundation\Application;
+use Rrmode\Platform\Foundation\Environment;
+use Rrmode\Platform\Packages\Events\PackageDiscoveredEvent;
+use Rrmode\Platform\Packages\Events\PackageLoadedEvent;
+use Rrmode\Platform\Packages\Events\PackageLoadingEvent;
+use Throwable;
+
+class PackageRegistry
+{
+    use Environment;
+
+    public function __construct(
+        readonly private Application $app
+    ){}
+
+    public function initPackage(Package $package): bool
+    {
+        $this->app->dispatch(
+            new PackageLoadingEvent(
+                $this->now(),
+                $package,
+            )
+        );
+
+        try {
+            $entry = $package->getEntry();
+
+            $entry->initialize(
+                $this->app,
+                $package,
+            );
+
+            $this->app->dispatch(
+                new PackageLoadedEvent(
+                    $this->now(),
+                    $package
+                )
+            );
+            return true;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    /**
+     * @return array<Package>
+     */
+    public function getInstalledPackages(): array
+    {
+        $platformPackages = array_filter(
+            $this->getRootComposerChildPackages(),
+            fn (array $rawChildPackage) =>
+                isset($rawChildPackage['type']) && $rawChildPackage['type'] === 'platform-package'
+        );
+
+        $mappedPackages = [];
+
+        array_walk(
+            $platformPackages,
+            function (array $rawPackageData, string $packageName) use (&$mappedPackages) {
+                try {
+                    $package = new Package(
+                        $packageName,
+                        $rawPackageData['install_path'],
+                        $rawPackageData['dev_requirement'],
+                        $rawPackageData['version'],
+                        $rawPackageData['pretty_version'],
+                    );
+
+                    $mappedPackages[] = $package;
+
+                    $this->app->dispatch(
+                        new PackageDiscoveredEvent(
+                            $this->now(),
+                            $package
+                        )
+                    );
+                } catch (Throwable) {}
+            }
+        );
+
+        return $mappedPackages;
+    }
+
+    public function getRootComposerChildPackages(): array
+    {
+        return $this->getRootComposerPackages()['versions'] ?? [];
+    }
+
+    public function getRootComposerPackages(): array
+    {
+        return current($this->getInstalledComposerPackages()) ?: [];
+    }
+
+    public function getInstalledComposerPackages(): array
+    {
+        return InstalledVersions::getAllRawData();
+    }
+}

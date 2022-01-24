@@ -2,6 +2,10 @@
 
 namespace Rrmode\Platform\Packages;
 
+use Rrmode\Platform\Packages\Abstractions\AbstractPackageEntry;
+use Rrmode\Platform\Packages\Exceptions\PackageEntryNotFoundException;
+use Throwable;
+
 class Package
 {
     private ?array $composerJson;
@@ -37,6 +41,18 @@ class Package
     public function getDependencies(): array
     {
         return $this->dependencies ??= ($this->getParsedJson()['require'] ?? []);
+    }
+
+    /**
+     * @throws PackageEntryNotFoundException
+     */
+    public function getEntry(): AbstractPackageEntry
+    {
+        try {
+            return new ($this->getExtra()['platform-package']['entry']);
+        } catch (Throwable) {
+            throw new PackageEntryNotFoundException();
+        }
     }
 
     public function getExtra(): array

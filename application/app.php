@@ -4,7 +4,7 @@ require dirname(__DIR__) .DIRECTORY_SEPARATOR.'vendor/autoload.php';
 
 $app = buildApp();
 
-$loader = new \Rrmode\Platform\Packages\PackageLoader($app);
+$loader = new \Rrmode\Platform\Packages\PackageRegistry($app);
 
 $packages = $loader->getInstalledPackages();
 

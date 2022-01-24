@@ -3,15 +3,12 @@
 namespace Rrmode\Platform\Foundation\Events;
 
 use DateTimeInterface;
+use Rrmode\Platform\Foundation\Application;
 
 class ApplicationInitializedEvent
 {
     public function __construct(
-        private DateTimeInterface $initializedAt
+        readonly public DateTimeInterface $time,
+        readonly public Application $application,
     ){}
-
-    public function time(): DateTimeInterface
-    {
-        return $this->initializedAt;
-    }
 }

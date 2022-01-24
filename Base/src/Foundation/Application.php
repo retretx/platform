@@ -24,18 +24,22 @@ class Application implements EventDispatcherInterface, ContainerInterface
      * @throws NotFoundExceptionInterface
      */
     private function __construct(
-        private ContainerInterface|AbstractAdvancedContainerCapabilities $container,
+        readonly private ContainerInterface|AbstractAdvancedContainerCapabilities $container,
     ){
-        static::dispatchToContainer(
-            $this->container,
-            new ApplicationInitializationEvent($this->now())
+        $this->dispatch(
+            new ApplicationInitializationEvent(
+                $this->now(),
+                $this
+            )
         );
 
         $this->runInitializers($this->container);
 
-        static::dispatchToContainer(
-            $this->container,
-            new ApplicationInitializedEvent($this->now())
+        $this->dispatch(
+            new ApplicationInitializedEvent(
+                $this->now(),
+                $this
+            )
         );
 
         static::logDebug($this->container, 'Application initialized');
