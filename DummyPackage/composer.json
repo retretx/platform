@@ -20,7 +20,7 @@
     },
     "extra": {
         "platform-package": {
-            "entry": "Rrmode\\Platform\\Packages\\DummyPackage\\AbstractPackageEntry"
+            "entry": "Rrmode\\Platform\\Packages\\DummyPackage\\PackageEntry"
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Rrmode\Platform\Packages;
 
+use Psr\Log\LoggerInterface;
 use Rrmode\Platform\Foundation\Application;
 use Rrmode\Platform\Foundation\Environment;
 use Rrmode\Platform\Packages\Events\PackageLoadedEvent;
@@ -40,7 +41,11 @@ class PackageLoader
                 )
             );
             return true;
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            try {
+                $logger = $this->app->get(LoggerInterface::class);
+                $logger->error("Package {$package->name} loading error: {$e->getMessage()}");
+            } catch (Throwable) {}
             return false;
         }
     }

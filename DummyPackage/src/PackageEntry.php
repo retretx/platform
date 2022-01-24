@@ -6,5 +6,8 @@ use Rrmode\Platform\Packages\Abstractions\AbstractPackageEntry;
 
 class PackageEntry extends AbstractPackageEntry
 {
+    public function initializeTest()
+    {
 
+    }
 }
