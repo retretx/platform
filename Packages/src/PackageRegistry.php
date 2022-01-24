@@ -16,37 +16,8 @@ class PackageRegistry
     use Environment;
 
     public function __construct(
-        readonly private Application $app
+        readonly private Application $app,
     ){}
-
-    public function initPackage(Package $package): bool
-    {
-        $this->app->dispatch(
-            new PackageLoadingEvent(
-                $this->now(),
-                $package,
-            )
-        );
-
-        try {
-            $entry = $package->getEntry();
-
-            $entry->initialize(
-                $this->app,
-                $package,
-            );
-
-            $this->app->dispatch(
-                new PackageLoadedEvent(
-                    $this->now(),
-                    $package
-                )
-            );
-            return true;
-        } catch (Throwable) {
-            return false;
-        }
-    }
 
     /**
      * @return array<Package>
@@ -88,17 +59,17 @@ class PackageRegistry
         return $mappedPackages;
     }
 
-    public function getRootComposerChildPackages(): array
+    private function getRootComposerChildPackages(): array
     {
         return $this->getRootComposerPackages()['versions'] ?? [];
     }
 
-    public function getRootComposerPackages(): array
+    private function getRootComposerPackages(): array
     {
         return current($this->getInstalledComposerPackages()) ?: [];
     }
 
-    public function getInstalledComposerPackages(): array
+    private function getInstalledComposerPackages(): array
     {
         return InstalledVersions::getAllRawData();
     }
